@@ -1,0 +1,34 @@
+server:
+  port: 8040
+
+spring:
+  application:
+    name: payment
+
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: payment
+      key-deserializer: org.apache.kafka.common.serialization.LongDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring:
+          json:
+            trusted:
+              packages: "*"
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.LongSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        spring:
+          json:
+            trusted:
+              packages: "*"
+
+gash:
+  topics:
+    booking: bookings
+
+eureka:
+  instance:
+    instance-id: "${spring.application.name}-${random.uuid}"

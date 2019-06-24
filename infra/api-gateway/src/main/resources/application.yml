@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: api.gateway
+
+eureka:
+  client:
+    register-with-eureka: false
+
+
+zuul:
+  routes:
+    user:
+      strip-prefix: false
+      path: /users/**
+      serviceId: user
+    garage:
+      strip-prefix: false
+      path: /garages/**
+      serviceId: garage
+    booking:
+      strip-prefix: false
+      path: /bookings/**
+      serviceId: booking

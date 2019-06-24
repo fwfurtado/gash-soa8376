@@ -1,0 +1,53 @@
+
+spring:
+  application:
+    name: garage
+  datasource:
+    url: jdbc:mysql://localhost/garage_gash_dev?createDatabaseIfNotExist=true&useSSL=false
+    username: root
+  jpa:
+    hibernate:
+      ddl-auto: update
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.LongSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        spring:
+          json:
+            trusted:
+              packages: "*"
+    consumer:
+      group-id: ${spring.application.name}
+      key-deserializer: org.apache.kafka.common.serialization.LongDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring:
+          json:
+            trusted:
+              packages: "*"
+
+management:
+  metrics:
+    tags:
+      application: ${spring.application.name}
+    export:
+      prometheus:
+        enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: info, health, prometheus
+
+gash:
+  topics:
+    user: users
+
+server:
+  port: 8020
+
+
+eureka:
+  instance:
+    instance-id: "${spring.application.name}-${random.uuid}"

@@ -1,0 +1,62 @@
+version: '3.7'
+
+services:
+
+  zoo-navigator-web:
+    image: elkozmon/zoonavigator-web
+    ports:
+      - "8080:8080"
+    environment:
+      WEB_HTTP_PORT: 8080
+      API_HOST: zoo-navigator-api
+      API_PORT: 9000
+    depends_on:
+      - zoo-navigator-api
+
+  zoo-navigator-api:
+    image: elkozmon/zoonavigator-api
+    environment:
+      API_HTTP_PORT: 9000
+
+  zookeeper:
+    image: zookeeper
+    ports:
+      - "2181:2181"
+    healthcheck:
+      test: ["CMD", "echo ruok | nc localhost 2181"]
+      interval: 5s
+      timeout: 5s
+      retries: 3
+  kafka:
+    image: kafka
+    environment:
+      - ZOOKEEPER_SERVERS=zookeeper:2181/kafka
+      - ADVERTISE_HOST=fwfurtado-host.local
+      - BROKER_ID=1
+    ports:
+      - "9092:9092"
+    depends_on:
+      - zookeeper
+
+  mysql:
+    image: mysql
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+    volumes:
+      - databases:/var/lib/mysql
+
+  prometheus:
+    image: prom/prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+  grafana:
+    image: grafana/grafana
+    ports:
+      - "3000:3000"
+
+volumes:
+  databases:

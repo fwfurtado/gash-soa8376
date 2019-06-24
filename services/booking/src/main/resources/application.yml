@@ -1,0 +1,56 @@
+server:
+  port: 8030
+
+spring:
+  application:
+    name: booking
+  datasource:
+    url: jdbc:mysql://localhost/booking_gash_dev?createDatabaseIfNotExist=true&useSSL=false
+    username: root
+  jpa:
+    hibernate:
+      ddl-auto: update
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: booking
+      key-deserializer: org.apache.kafka.common.serialization.LongDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring:
+          json:
+            trusted:
+              packages: "*"
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.LongSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        spring:
+          json:
+            trusted:
+              packages: "*"
+
+management:
+  metrics:
+    tags:
+      application: ${spring.application.name}
+    export:
+      prometheus:
+        enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: info, health, prometheus
+
+eureka:
+  instance:
+    instance-id: "${spring.application.name}-${random.uuid}"
+
+
+gash:
+  topics:
+    user: users
+    garage: garages
+    payment: payments
+  urls:
+    payment: http://payment/payment

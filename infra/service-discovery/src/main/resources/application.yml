@@ -1,0 +1,22 @@
+application:
+  version: 1.1.1
+  formatted-version: v1.1.1
+  title: "Service Discovery Application"
+
+spring-boot:
+  version: 2.1.5.RELEASE
+  formatted-version: v2.1.5.RELEASE
+
+spring:
+  main:
+    banner-mode: "off"
+  application:
+    name: service.discovery
+
+server:
+  port: 8761
+
+eureka:
+  client:
+    fetch-registry: false
+    register-with-eureka: false

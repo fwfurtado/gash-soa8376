@@ -1,0 +1,38 @@
+server:
+  port: 8010
+
+spring:
+  application:
+    name: user
+  datasource:
+    url: jdbc:mysql://localhost/user_gash_dev?createDatabaseIfNotExist=true&useSSL=false
+    username: root
+  jpa:
+    hibernate:
+      ddl-auto: update
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.LongSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        spring:
+          json:
+            trusted:
+              packages: "*"
+
+management:
+  metrics:
+    tags:
+      application: ${spring.application.name}
+    export:
+      prometheus:
+        enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: info, health, prometheus
+
+eureka:
+  instance:
+    instance-id: "${spring.application.name}-${random.uuid}"

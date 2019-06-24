@@ -1,0 +1,19 @@
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+    }
+}
+rootProject.name = 'gash'
+include 'services'
+include 'services:user'
+include 'services:user:event'
+include 'services:user:domain'
+include 'services:user:application'
+include 'services:garage'
+include 'services:booking'
+include 'services:payment'
+include 'infra'
+include 'infra:service-discovery'
+include 'infra:api-gateway'
+include 'infra:configuration-server'
+
